@@ -1,3 +1,5 @@
+const db = require("../../data/db-config");
+
 const getAll = () => {
   // KODLAR BURAYA
 
