@@ -1,22 +1,28 @@
 const getAll = () => {
   // KODLAR BURAYA
-}
 
-const getById = id => {
-  // KODLAR BURAYA
-}
+  return db("accounts");
+};
 
-const create = account => {
+const getById = (id) => {
   // KODLAR BURAYA
-}
+  return db("accounts").where("id", id).first();
+};
+
+const create = (account) => {
+  // KODLAR BURAYA
+  return db("accounts").insert(account);
+};
 
 const updateById = (id, account) => {
   // KODLAR BURAYA
-}
+  return db("accounts").where("id", id).update(account);
+};
 
-const deleteById = id => {
+const deleteById = (id) => {
   // KODLAR BURAYA
-}
+  return db("accounts").where("id", id).delete();
+};
 
 module.exports = {
   getAll,
@@ -24,4 +30,4 @@ module.exports = {
   create,
   updateById,
   deleteById,
-}
+};
