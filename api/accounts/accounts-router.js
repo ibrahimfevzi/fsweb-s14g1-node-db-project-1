@@ -1,21 +1,21 @@
 const router = require("express").Router();
-
-const Account = require("./accounts-model");
+const accountsModel = require("./accounts-model");
 const mw = require("./accounts-middleware");
 
 router.get("/", async (req, res, next) => {
+  // KODLAR BURAYA
   try {
-    const accounts = await Account.getAll();
-    res.json(accounts);
+    const allAccounts = await accountsModel.getAll();
+    res.json(allAccounts);
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/:id", mw.checkAccountId, async (req, res, next) => {
+router.get("/:id", mw.checkAccountId, (req, res, next) => {
+  // KODLAR BURAYA
   try {
-    const account = await Account.getById(req.params.id);
-    res.json(account);
+    res.json(req.existAccount);
   } catch (error) {
     next(error);
   }
@@ -26,9 +26,13 @@ router.post(
   mw.checkAccountPayload,
   mw.checkAccountNameUnique,
   async (req, res, next) => {
+    // KODLAR BURAYA
     try {
-      const account = await Account.create(req.body);
-      res.status(201).json(account);
+      const insertedRecord = await accountsModel.create({
+        name: req.body.name,
+        budget: req.body.budget,
+      });
+      res.status(201).json(insertedRecord);
     } catch (error) {
       next(error);
     }
@@ -40,9 +44,13 @@ router.put(
   mw.checkAccountId,
   mw.checkAccountPayload,
   async (req, res, next) => {
+    // KODLAR BURAYA
     try {
-      const account = await Account.updateById(req.params.id, req.body);
-      res.json(account);
+      const updatedRecord = await accountsModel.updateById(req.params.id, {
+        name: req.body.name,
+        budget: req.body.budget,
+      });
+      res.json(updatedRecord);
     } catch (error) {
       next(error);
     }
@@ -50,17 +58,22 @@ router.put(
 );
 
 router.delete("/:id", mw.checkAccountId, async (req, res, next) => {
+  // KODLAR BURAYA
   try {
-    const account = await Account.deleteById(req.params.id);
-    res.json(account);
+    await accountsModel.deleteById(req.params.id);
+    res.json(req.existAccount);
   } catch (error) {
     next(error);
   }
 });
 
 router.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ message: "Server error" });
+  // eslint-disable-line
+  // KODLAR BURAYA
+  res.status(err.status || 500).json({
+    customMessage: "Global handler tarafında hata alındı",
+    message: err.message,
+  });
 });
 
 module.exports = router;
